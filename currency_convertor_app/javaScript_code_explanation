@@ -1,0 +1,68 @@
+//This JavaScript code is for a simple currency converter that fetches the latest exchange rates from a currency API and displays
+//the converted values in a table. Let's break down the code:
+
+//```javascript
+// Log a message to the console to indicate that the file is working
+console.log("the file is working");
+
+// Define an asynchronous function named 'populate' that takes 'value' and 'baseCurrency' as parameters
+const populate = async (value, baseCurrency) => {
+    // Initialize an empty string variable 'myStr'
+    let myStr = "";
+
+    // Set the API key and encode it
+    const apiKey = "cur_live_zqizB5A2LpOIhoZpo4MV5PULbKwNNWVCvf1W3lEM";
+    const encodedApiKey = encodeURIComponent(apiKey);
+
+    // Construct the URL for fetching the latest exchange rates
+    const url = `https://api.currencyapi.com/v3/latest?apikey=${encodedApiKey}&base_currency=${baseCurrency}`;
+
+    // Fetch data from the API
+    let response = await fetch(url);
+    let rJson = await response.json();
+
+    // Display the output section in the HTML
+    document.querySelector(".output").style.display = "block";
+
+    // Iterate through the keys of the 'data' object in the API response
+    for (let key of Object.keys(rJson["data"])) {
+        // Construct HTML table rows with currency details and converted values
+        myStr += `          
+           <tr>
+           <td>${key}</td>
+          <td>${rJson["data"][key]["code"]}</td>
+          <td>${rJson["data"][key]["value"] * value}</td>
+          </tr>
+        `;
+    }
+
+    // Select the table body and set its innerHTML to the constructed string
+    const tableBody = document.querySelector("tbody");
+    tableBody.innerHTML = myStr;
+};
+
+// Select the button with the class 'btn'
+const btn = document.querySelector(".btn");
+
+// Add a click event listener to the button
+btn.addEventListener("click", (e) => {
+    // Prevent the default form submission behavior
+    e.preventDefault();
+
+    // Log a message to the console when the button is clicked
+    console.log("button is clicked");
+
+    // Get the quantity value and selected currency from the input fields
+    const value = parseInt(document.querySelector("input[name='quantity']").value);
+    const baseCurrency = document.querySelector("select[name='currency']").value;
+
+    // Call the 'populate' function with the obtained values
+    populate(value, baseCurrency);
+});
+//```
+
+//In summary, this code defines a function (`populate`) to fetch currency exchange rates from an API, and then it updates the 
+//HTML to display the converted values in a table when a button is clicked. The API key is used for authentication when making requests 
+ // to the currency API. The HTML elements are selected using `document.querySelector` to manipulate the DOM. The `fetch` function is 
+  //used to make an asynchronous request to the API, and the results are processed and displayed in an HTML table. The event listener 
+  is added to a button, triggering the currency conversion process when the button is clicked.
